@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../bkt/pyBKT-examples"
+		}
+	],
+	"settings": {
+		"julia.environmentPath": "c:\\Users\\ameli\\info\\M2\\EVHI\\Projet\\model"
+	}
+}

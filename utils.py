@@ -37,15 +37,13 @@ def set_p_skill(fileName : str, skill_name : str, level : int, p : float) -> Non
 
 if __name__ == '__main__':
     # generate_data("test.csv", 15, 1)
-    df0 = pd.read_csv("test.csv")
-    
-    seq_length = round(len(df0) / len(df0["user_id"].unique()))
-    df_train = (df0.groupby('user_id').apply(lambda x: x.iloc[:-1] if len(x)>1 else x).reset_index(drop=True)) #remove all but last element
     
     model = Model(num_fits = 5, seed = 200)
     print(model)
+    df_train = pd.read_csv("test_1_15.csv")
+
     model.fit(data = df_train)
-    params = model.params
-    print(params)
+    print("A")
+    df0 = pd.read_csv("test_predict_0.csv")
     predictions = model.predict(data = df0)
     print(predictions)
