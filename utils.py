@@ -1,13 +1,14 @@
 import pandas as pd
 import random
 import numpy as np
+import sys
+
 from time import time
 from typing import List
 from pyBKT.models import Model
 
-MECA = {0 : "meca0_0", 1 : "meca0_1",
-        2 : "meca1_0", 3 : "meca1_1",
-        4 : "meca2_0", 5 : "meca2_1"}
+MECA = {0 : "hexa", 1 : "carr",
+        2 : "sun"}
 LIMIT = 0.7
 
 def generate_data(fileName_model : str, nb_players : int, skill_id : int) -> None:
@@ -33,6 +34,21 @@ def generate_data(fileName_model : str, nb_players : int, skill_id : int) -> Non
     df.to_csv(fileName_model, index = False)
     return
 
+def add_data_to_model(user_id : int, skill_id : int, correct : int, nb : int, fileName_model : str = "data/all_data.csv") -> None:
+    
+    """add success or fail for user_id and skill_id
+
+    Args:
+        fileName (str): csv file name
+        user_id (int): player id
+        skill_id (int): skill id
+    """
+    data = {"user_id" : [user_id], "skill_name" : [skill_id], "correct" : [correct]}        
+    df = pd.DataFrame(data)
+    for i in range(0, nb):
+        df.to_csv(fileName_model, mode='a', index=False, header=False, lineterminator='\n')
+    return
+
 def set_p_skill(fileName_prob : str, user_id : int, skill_name : str, p : float) -> None :
     """set the probability p in the csv file
 
@@ -49,9 +65,21 @@ def set_p_skill(fileName_prob : str, user_id : int, skill_name : str, p : float)
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 5:
+        print("pb nb paramètres")
+        sys.exit(1)
+
+    # Récupérer les arguments de la ligne de commande
+    user_id = sys.argv[1]
+    skill_id = sys.argv[2]
+    correct = sys.argv[3]
+    nb = sys.argv[4]
+
+    
+    add_data_to_model(int(user_id), int(skill_id),int(correct), int(nb))
     # generate_data("test.csv", 15, 1)
     
-    model = Model(num_fits = 5, seed = 200)
+    # model = Model(num_fits = 5, seed = 200)
     
     # df_train = pd.read_csv("test_1_15.csv")
 
@@ -60,8 +88,8 @@ if __name__ == '__main__':
     # end = time()
     # print("temps fit : "+str(end-start))
     
-    df0 = pd.read_csv("test_predict_0.csv")
-    df0.to_csv("test_1_15.csv", mode='a', index=False, header=False)
+    # df0 = pd.read_csv("test_predict_0.csv")
+    # df0.to_csv("test_1_15.csv", mode='a', index=False, header=False)
     # set_p_skill("p_bkt.csv",0,"carre2",0.1)
     
     # start = time()
