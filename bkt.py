@@ -28,7 +28,7 @@ def fit_model(fileName_model : str = "data/all_data.csv") -> Model:
     model.save('model.pkl')
     return model
 
-def partial_fit_model(model : Model, user_id : int, skill_id : int, correct : int, fileName_load_model : str = None) -> None :
+def partial_fit_model(model : Model, user_id : int, skill_id : int, correct : int, fileName_load_model : str = "model.pkl") -> None :
     """partial fit the model
 
     Args:
@@ -49,11 +49,12 @@ def partial_fit_model(model : Model, user_id : int, skill_id : int, correct : in
     dt_v = pd.DataFrame(data=v)
 
     #partial fit model
-    model.partial_fit(data=dt_v)
     
+    model.partial_fit(data=dt_v)
+    model.save(fileName_load_model)
     return 
     
-def update_player(model : Model, user_id : int, skill_id : int, correct : int, fileName_prob : str = "data/all_p.csv", fileName_model : str = "data/all_data.csv", fileName_load_model : str = None) -> int :
+def update_player(model : Model, user_id : int, skill_id : int, correct : int, fileName_prob : str = "data/all_p.csv", fileName_model : str = "data/all_data.csv", fileName_load_model : str = "model.pkl") -> int :
     """update the probability of the skill for the player after a success or a fail
         and update the model
 
