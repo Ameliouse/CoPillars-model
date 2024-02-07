@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np
+import os
 import sys
 from time import time
 from time import sleep
@@ -51,10 +51,10 @@ def partial_fit_model(model : Model, user_id : int, skill_id : int, correct : in
     #partial fit model
     
     model.partial_fit(data=dt_v)
-    model.save(fileName_load_model)
-    return 
+    # model.save(fileName_load_model)
+    return model
     
-def update_player(model : Model, user_id : int, skill_id : int, correct : int, fileName_prob : str = "data/all_p.csv", fileName_model : str = "data/all_data.csv", fileName_load_model : str = "model.pkl") -> int :
+def update_player(model : Model, user_id : int, skill_id : int, correct : int, fileName_prob : str = None, fileName_model : str = "data/all_data.csv", fileName_load_model : str = "model.pkl") -> int :
     """update the probability of the skill for the player after a success or a fail
         and update the model
 
@@ -74,23 +74,33 @@ def update_player(model : Model, user_id : int, skill_id : int, correct : int, f
     if model == None:
         model = Model(num_fits = 5, seed = 200)
         model.load(fileName_load_model)
-    
+        
+    if fileName_prob != None :
+        fileName_prob = fileName_prob + "data/all_data_"+str(user_id)+".csv"
+    else:
+        fileName_prob = "data/all_data_"+str(user_id)+".csv"
+        
     v = {"user_id" : [user_id], "skill_name" : [skill_id], "correct" : [correct]}
     dt_v = pd.DataFrame(data=v)
     
-     #add to the model file v
+    # Vérifier si le fichier existe
+    if os.path.isfile(fileName_prob):
+        # Si le fichier existe, append les données
+        dt_v.to_csv(fileName_prob, mode='a', header=False, index=False, lineterminator='\n')
+    else:
+        # Si le fichier n'existe pas, créez-le et écrivez les données
+        dt_v.to_csv(fileName_prob)
+        
+    #add to the model file v
     # dt_v.to_csv(fileName_model, mode='a', index=False, header=False, lineterminator='\n')
-    
-    #partial fit model
 
-    # model.partial_fit(data=dt_v)
-    # print("APRES PARTIAL FIT")
     #predict p success
-    dt_pred = model.predict(data=dt_v)
+    dt_pred = model.predict(data_path=fileName_prob)
 
-    p_success = dt_pred.loc[user_id, "state_predictions"]
+    p_success = dt_pred.iloc[-1, dt_pred.columns.get_loc("state_predictions")]
     #set p success
     # ut.set_p_skill(fileName_prob, user_id, ut.MECA[skill_id], p_success)
+    # dt_pred[dt_pred['skill_name'] == '0']
     return p_success
     
 # def no_skills(user_id : int, fileName_prob : str = "all_p.csv") -> List[int]:
