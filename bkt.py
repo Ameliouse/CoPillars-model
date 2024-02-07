@@ -128,8 +128,7 @@ if __name__ == '__main__':
     skill_id = sys.argv[2]
     correct = sys.argv[3]
     path = sys.argv[4]
-    path_load_model = sys.argv[5]
 
     # df_train = pd.read_csv(path)
 
-    print(update_player(None, int(user_id), int(skill_id),int(correct), fileName_model=path, fileName_load_model=path_load_model))
+    print(update_player(None, int(user_id), int(skill_id),int(correct), fileName_prob = path, fileName_model=path+"data/all_data.csv", fileName_load_model=path+"model.pkl"))
