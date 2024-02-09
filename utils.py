@@ -8,8 +8,8 @@ from typing import List
 from pyBKT.models import Model
 
 MECA = {0 : "hexa", 1 : "carr",
-        2 : "sun"}
-LIMIT = 0.7
+        3 : "sun"}
+LIMIT = 0.9
 
 def generate_data(fileName_model : str, nb_players : int, skill_id : int) -> None:
     """generate random success for a skill and nb_player players
